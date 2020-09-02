@@ -1,0 +1,10 @@
+name: 'Slack errors'
+description: 'Send build errors rollup message to Slack'
+inputs:
+  slack-webhook-url:
+    description: 'Your Slack webhook'
+    required: true
+    default: ''
+runs:
+  using: 'node12'
+  main: 'index.js'
