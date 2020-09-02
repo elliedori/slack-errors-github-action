@@ -78,7 +78,7 @@ try {
   
     console.log('Sending slack message');
     try {
-      const slackResponse = await sendSlackMessage(slackWebhookUrl, buildMessage);
+      const slackResponse = await sendSlackMessage(slackWebhookUrl, userAccountNotification);
       console.log('Message response', slackResponse);
     } catch (e) {
       console.error('There was a error with the request', e);
