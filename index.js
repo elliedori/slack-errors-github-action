@@ -1,6 +1,7 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const https = require('https');
+const glob = require("glob");
 
 try {
   const slackWebhookUrl = core.getInput('slack-webhook-url');
@@ -39,6 +40,13 @@ try {
       }
     ]
   };
+
+
+  glob("job-*.txt", function (er, files) {
+    console.log("found files: ", files)
+    console.log("error", er);
+  })
+
 
   function sendSlackMessage (webhookURL, messageBody) {
     try {
