@@ -5,6 +5,26 @@ inputs:
     description: 'Your Slack webhook'
     required: true
     default: ''
+  branch-name:
+    description: 'Branch name'
+    required: true
+    default: ''
+  commit-sha:
+    description: 'Run commit SHA'
+    required: true
+    default: ''
+  commit-owner:
+    description: 'Owner of commit'
+    required: true
+    default: ''
+  repo-name:
+    description: 'Repository name'
+    required: true
+    default: ''
+  run-id:
+    description: 'Build run ID'
+    required: true
+    default: ''
 runs:
   using: 'node12'
   main: 'index.js'

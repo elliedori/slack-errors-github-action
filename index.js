@@ -4,6 +4,11 @@ const https = require('https');
 
 try {
   const slackWebhookUrl = core.getInput('slack-webhook-url');
+  const branchName = core.getInput('branch-name');
+  const commitSha = core.getInput('commit-sha');
+  const commitOwner = core.getInput('commit-owner');
+  const repoName = core.getInput('repo-name');
+  const runId = core.getInput('run-id');
 
   // cat all error files in environment
   // build Slack message
@@ -15,14 +20,14 @@ try {
           "type":"header",
           "text":{
             "type":"plain_text",
-            "text":"CI build failed for commit 123"
+            "text":`CI build failed for commit ${commitSha} on ${branchName}`
           }
       },
       {
           "type":"section",
           "text":{
             "type":"mrkdwn",
-            "text":"— _Author: sampleuser"
+            "text":`— _Author: ${commitOwner}_  <https://github.com/${repoName}/actions/runs/${runId}|View build>`
           }
       },
       {
