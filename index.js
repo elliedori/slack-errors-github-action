@@ -36,11 +36,11 @@ try {
   };
 
   function sendSlackMessage (webhookURL, messageBody) {
-    // try {
-    //   messageBody = JSON.stringify(messageBody);
-    // } catch (e) {
-    //   throw new Error('Failed to stringify messageBody', e);
-    // }
+    try {
+      messageBody = JSON.stringify(messageBody);
+    } catch (e) {
+      throw new Error('Failed to stringify messageBody', e);
+    }
   
     return new Promise((resolve, reject) => {
       const requestOptions = {
@@ -53,10 +53,10 @@ try {
       const req = https.request(webhookURL, requestOptions, (res) => {
         let response = '';
   
-        // res.on('data', (d) => {
-        //   response += d;
-        // });
-        // // response finished, resolve the promise with data
+        res.on('data', (d) => {
+          response += d;
+        });
+        // response finished, resolve the promise with data
         res.on('end', () => {
           resolve(response);
         })
@@ -72,7 +72,7 @@ try {
   }
   
   (async function () {
-    if (!yourWebHookURL) {
+    if (!slackWebhookUrl) {
       console.error('Please supply a Slack webhool URL');
     }
   
