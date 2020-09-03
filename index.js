@@ -14,7 +14,7 @@ function prepareErrorOutput() {
   return new Promise((resolve, reject) => {
     glob("job-*.txt", {nonull: true}, function (err, files) {
       if (err) { reject("Unable to parse files") }
-  
+
       fullErrors = ""
       for (let i=0; i<files.length; i++) {
         try {
@@ -28,13 +28,13 @@ function prepareErrorOutput() {
   })
 }
 
-function userAccountNotification (errors) {
+function errorNotification (errors) {
   return {"blocks":[
     {
         "type":"header",
         "text":{
           "type":"plain_text",
-          "text":`CI build failed for commit ${commitSha} on ${branchName}`
+          "text":`CI build failed for commit ${commitSha.substring(0,9)} on ${branchName.replace("refs/heads/", "")}`
         }
     },
     {
@@ -98,16 +98,12 @@ async function sendSlackNotification(message) {
 
 async function prepareAndSendNotification() {
   const errors = await prepareErrorOutput()
-  const slackMessage = userAccountNotification(errors)
+  const slackMessage = errorNotification(errors)
   await sendSlackNotification(slackMessage);
 }
 
 try {
-
   prepareAndSendNotification();
-
-  // const payload = JSON.stringify(github.context.payload, undefined, 2)
-  // console.log(`The event payload: ${payload}`);
 } catch (err) {
   core.setFailed(err.message);
 }
