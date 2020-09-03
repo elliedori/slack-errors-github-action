@@ -48,11 +48,11 @@ try {
     return files;
   })
 
-  errorFiles.forEach(function(file){
-    const data = fs.readFileSync('my-file.txt', 'utf8');
-    console.log("Indivial file data is: ", data)
-    errorOutput += data
-  });
+  console.log("error files are: ", errorFiles)
+
+  for (var file in errorFiles) {
+    errorOutput += fs.readFileSync(file, 'utf8');
+  }
 
   console.log("Final error output is: ", errorOutput);
 
@@ -77,7 +77,6 @@ try {
         res.on('data', (d) => {
           response += d;
         });
-        // response finished, resolve the promise with data
         res.on('end', () => {
           resolve(response);
         })
