@@ -41,12 +41,20 @@ try {
     ]
   };
 
+  const errorOutput = ""
 
-  glob("job-*.txt", function (er, files) {
-    console.log("found files: ", files)
-    console.log("error", er);
+  const errorFiles = glob("job-*.txt", function (er, files) {
+    if (er) { throw new Error("Unable to parse files") }
+    return files;
   })
 
+  errorFiles.forEach(function(file){
+    const data = fs.readFileSync('my-file.txt', 'utf8');
+    console.log("Indivial file data is: ", data)
+    errorOutput += data
+  });
+
+  console.log("Final error output is: ", errorOutput);
 
   function sendSlackMessage (webhookURL, messageBody) {
     try {
