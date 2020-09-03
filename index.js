@@ -15,6 +15,10 @@ function prepareErrorOutput() {
     glob("job-*.txt", {nonull: true}, function (err, files) {
       if (err) { reject("Unable to parse files") }
 
+      // If there is only one matching file, it is the 'initiate-error-tracking' file
+      // No other matching files indicates the build ran without issue
+      if (files.length === 1) { resolve("")}
+
       fullErrors = ""
       for (let i=0; i<files.length; i++) {
         try {
@@ -83,14 +87,9 @@ async function makePostRequest(webhookUrl, messageBody) {
 };
 
 async function sendSlackNotification(message) {
-  if (!slackWebhookUrl) {
-    console.error('Please supply a Slack webhool URL');
-  }
-
   try {
-    console.log('Sending slack message');
-    const slackResponse = await makePostRequest(slackWebhookUrl, message);
-    console.log('Message response', slackResponse);
+    await makePostRequest(slackWebhookUrl, message);
+    console.log("Errors successfully reported to Slack")
   } catch (e) {
     console.error('There was a error with the request', e);
   }
@@ -98,8 +97,13 @@ async function sendSlackNotification(message) {
 
 async function prepareAndSendNotification() {
   const errors = await prepareErrorOutput()
-  const slackMessage = errorNotification(errors)
-  await sendSlackNotification(slackMessage);
+
+  if (errors === "") {
+    console.log("Slack message not sent, no errors to report")
+  } else {
+    const slackMessage = errorNotification(errors)
+    await sendSlackNotification(slackMessage);
+  }
 }
 
 try {
